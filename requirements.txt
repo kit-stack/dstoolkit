@@ -1,0 +1,10 @@
+jupyter
+pandas
+scikit-learn
+numpy
+matplotlib
+seaborn
+black
+haversine
+toml
+nose
