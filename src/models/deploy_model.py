@@ -1,12 +1,26 @@
+import sys
+import os
+
+# Get the project root directory and add it to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.abspath(os.path.join(current_dir, "../../"))  # Go up two levels
+print(current_dir,root_dir)
+sys.path.append(root_dir)
+
+
+#%%
 import numpy as np
 import pandas as pd
-
 from src.features.build_features import apply_feature_engineering
 from src.utils.guardrails import validate_prediction_results
 from src.utils.store import AssignmentStore
 
 
-@validate_prediction_results
+# Define path to your serialized model and preprocessing pipeline
+model_path = os.path.join(root_dir,"models", "saved_model.pkl")
+pipeline_path = os.path.join(root_dir,"models", "preprocessing_pipeline.pkl")
+
+# Load the model and preprocessing pipeline
 def main():
     store = AssignmentStore()
 
@@ -18,7 +32,7 @@ def main():
 
     selected_drivers = choose_best_driver(df_test)
     store.put_predictions("results.csv", selected_drivers)
-    print("Inference process completed successfully.")
+
 
 def choose_best_driver(df: pd.DataFrame) -> pd.DataFrame:
     df = df.groupby("order_id").agg({"driver_id": list, "score": list}).reset_index()
